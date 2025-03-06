@@ -1,23 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Menus\MenuAvaliarAlbum.cs" />
-    <Compile Remove="Migrations\20250305173558_projetoInicial.cs" />
-    <Compile Remove="Migrations\20250305173558_projetoInicial.Designer.cs" />
-    <Compile Remove="Migrations\20250305175316_PopularTable.cs" />
-    <Compile Remove="Migrations\20250305175316_PopularTable.Designer.cs" />
-    <Compile Remove="Migrations\20250305181256_AddColunasMusica.cs" />
-    <Compile Remove="Migrations\20250305181256_AddColunasMusica.Designer.cs" />
-    <Compile Remove="Migrations\20250305182040_RelationArtistaMusica.cs" />
-    <Compile Remove="Migrations\20250305182040_RelationArtistaMusica.Designer.cs" />
-    <Compile Remove="Migrations\ScreenSoundContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,7 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\ScreenSound.Shared.Dados\ScreenSound.Shared.Dados.csproj" />
+    <ProjectReference Include="..\ScreenSound.Shared.Modelos\ScreenSound.Shared.Modelos.csproj" />
   </ItemGroup>
 
 </Project>

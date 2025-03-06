@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ScreenSound.Bancos
 {
-    internal class ScreenSoundContext: DbContext
+    public class ScreenSoundContext: DbContext
     {
         public DbSet<Artista> Artistas { get; set; }
         public DbSet<Musica> Musicas { get; set; }
