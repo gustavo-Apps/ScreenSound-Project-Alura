@@ -1,7 +1,9 @@
 ﻿namespace ScreenSound.Modelos;
 
-internal class Musica
+public class Musica
 {
+    public virtual ICollection<Musica> Musicas { get; set; } = new List<Musica>();
+
     public Musica(string nome)
     {
         Nome = nome;
@@ -10,12 +12,17 @@ internal class Musica
     public string Nome { get; set; }
     public int Id { get; set; }
 
+    public int? AnoLancamento { get; set; }
+
+    public string? Link { get; set; }
+
+    public virtual Artista? Artista { get; set; }
+
     public void ExibirFichaTecnica()
     {
         Console.WriteLine($"Nome: {Nome}");
       
     }
-
     public override string ToString()
     {
         return @$"Id: {Id}

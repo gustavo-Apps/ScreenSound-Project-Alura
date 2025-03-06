@@ -17,12 +17,13 @@ namespace ScreenSound.Bancos
 
 
         private string connectionServer = "Data Source=(localdb)\\MSSQLLocalDB;Initial " +
-                    "Catalog=screenSound;Integrated Security=True;Encrypt=False;";
+                    "Catalog=screenSoundV1;Integrated Security=True;Encrypt=False;";
         //atribuir a conexao a uma variavel privada
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
         {
-            optionsBuilder.UseSqlServer(connectionServer);
+            optionsBuilder.UseSqlServer(connectionServer)
+                          .UseLazyLoadingProxies();
         }
     }
 }

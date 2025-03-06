@@ -6,14 +6,14 @@ namespace ScreenSound.Menus;
 
 internal class MenuMostrarMusicas : Menu
 {
-    public override void Executar(ArtistaDAL ArtistaDAL)
+    public override void Executar(DAL<Artista> ArtistaDAL)
     {
         base.Executar(ArtistaDAL);
         ExibirTituloDaOpcao("Exibir detalhes do artista");
         Console.Write("Digite o nome do artista que deseja conhecer melhor: ");
         string nomeDoArtista = Console.ReadLine()!;
-        var artistasRegistrados = ArtistaDAL.Buscar(nomeDoArtista);
-        if (artistasRegistrados is not null && artistasRegistrados.Any())
+        var artistasRegistrados = ArtistaDAL.Buscar(a => a.Nome.Equals(nomeDoArtista));
+        if (artistasRegistrados is not null && artistasRegistrados.Any()) // Check if the list is not empty
         {
             Console.WriteLine("\nDiscografia:");
             foreach (var artista in artistasRegistrados)
