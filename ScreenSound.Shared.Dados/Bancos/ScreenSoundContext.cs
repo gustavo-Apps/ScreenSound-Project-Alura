@@ -14,7 +14,7 @@ namespace ScreenSound.Bancos
     {
         public DbSet<Artista> Artistas { get; set; }
         public DbSet<Musica> Musicas { get; set; }
-
+        public DbSet<Genero> Generos { get; set; }
 
         private string connectionServer = "Data Source=(localdb)\\MSSQLLocalDB;Initial " +
                     "Catalog=screenSoundV1;Integrated Security=True;Encrypt=False;";

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ScreenSound.api.Requests;
+using ScreenSound.API.Requests;
 using ScreenSound.Bancos;
 using ScreenSound.Modelos;
 
@@ -22,8 +24,9 @@ namespace ScreenSound.api.Endpoints
                 }
                 return Results.Ok(artista);
             });
-            app.MapPost("/Artistas", ([FromServices] DAL<Artista> dal, [FromBody] Artista artista) =>
+            app.MapPost("/Artistas", ([FromServices] DAL<Artista> dal, [FromBody] ArtistaRequest artistaRequest) =>
             {
+                var artista = new Artista(artistaRequest.nome, artistaRequest.bio);
                 dal.Adicionar(artista);
                 return Results.Ok();
             });
@@ -37,16 +40,17 @@ namespace ScreenSound.api.Endpoints
                 dal.Deletar(artista);
                 return Results.NoContent();
             });
-            app.MapPut("/Artistas", ([FromServices] DAL<Artista> dal, [FromBody] Artista artista) =>
+            app.MapPut("/Artistas", ([FromServices] DAL<Artista> dal, [FromBody] ArtistaRequestEdit artistaRequestEdit) =>
             {
-                var artistaAtualizar = dal.Buscar(a => a.Id == artista.Id).FirstOrDefault();
+                var artistaAtualizar = new Artista(artistaRequestEdit.nome, artistaRequestEdit.bio) { Id = artistaRequestEdit.Id, FotoPerfil = artistaRequestEdit.FotoPerfil};
+                artistaAtualizar = dal.Buscar(a => a.Id == artistaRequestEdit.Id).FirstOrDefault();
                 if (artistaAtualizar is null)
                 {
                     return Results.NotFound();
                 }
-                artistaAtualizar.Nome = artista.Nome;
-                artistaAtualizar.Bio = artista.Bio;
-                artistaAtualizar.FotoPerfil = artista.FotoPerfil;
+                artistaAtualizar.Nome = artistaRequestEdit.nome;
+                artistaAtualizar.Bio = artistaRequestEdit.bio;
+                artistaAtualizar.FotoPerfil = artistaRequestEdit.FotoPerfil ?? artistaAtualizar.FotoPerfil;
                 dal.Atualizar(artistaAtualizar);
                 return Results.Ok();
             });
