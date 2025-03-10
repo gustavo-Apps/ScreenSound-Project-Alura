@@ -1,4 +1,5 @@
-﻿namespace ScreenSound.Modelos;
+﻿using ScreenSound.Shared.Modelos.Modelos;
+namespace ScreenSound.Modelos;
 
 /// <summary>
 /// Represents a music track.
@@ -44,6 +45,7 @@ public class Musica
     /// </summary>
     public virtual Artista? Artista { get; set; }
 
+    public virtual ICollection<Genero> Generos { get; set; }
     /// <summary>
     /// Displays the technical details of the music track.
     /// </summary>

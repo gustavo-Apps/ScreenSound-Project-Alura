@@ -2,12 +2,14 @@
 using ScreenSound.api.Requests;
 using ScreenSound.Bancos;
 using ScreenSound.Modelos;
+using ScreenSound.Shared.Modelos.Modelos;
 
 namespace ScreenSound.api.Endpoints
 {
     public static class MusicasExtensions
     {
-        public static void AddEndpointsMusicas(this WebApplication app) {
+        public static void AddEndpointsMusicas(this WebApplication app)
+        {
             app.MapGet("/Musicas", ([FromServices] DAL<Musica> dal) =>
             {
                 return Results.Ok(dal.Listar());
@@ -25,7 +27,12 @@ namespace ScreenSound.api.Endpoints
 
             app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal, [FromBody] MusicaRequest musicaRequest) =>
             {
-                var musica = new Musica(musicaRequest.nome);
+                var musica = new Musica(musicaRequest.nome)
+                {
+                    Id = musicaRequest.artistaId,
+                    AnoLancamento = musicaRequest.anoLancamento,
+                    Generos = musicaRequest.Generos is not null ? GeneroRequestConverter(musicaRequest.Generos) : new List<Genero>()
+                };
                 dal.Adicionar(musica);
                 return Results.Ok();
             });
@@ -43,7 +50,7 @@ namespace ScreenSound.api.Endpoints
 
             app.MapPut("/Musicas", ([FromServices] DAL<Musica> dal, [FromBody] MusicaRequestEdit musicaRequestEdit) =>
             {
-                var musica = new Musica(musicaRequestEdit.nome) { Id = musicaRequestEdit.id, AnoLancamento = musicaRequestEdit.anoLancamento,  };
+                var musica = new Musica(musicaRequestEdit.nome) { Id = musicaRequestEdit.id, AnoLancamento = musicaRequestEdit.anoLancamento, };
                 var musicaAtualizar = dal.Buscar(m => m.Id == musica.Id).FirstOrDefault();
                 if (musicaAtualizar is null)
                 {
@@ -52,9 +59,20 @@ namespace ScreenSound.api.Endpoints
                 musicaAtualizar.Nome = musica.Nome;
                 musicaAtualizar.AnoLancamento = musica.AnoLancamento;
                 musicaAtualizar.Artista = musica.Artista;
+
                 dal.Atualizar(musicaAtualizar);
                 return Results.Ok();
             });
+        }
+
+        private static ICollection<Genero> GeneroRequestConverter(ICollection<GeneroRequest> generos)
+        {
+            return generos.Select(a => RequestToEntity(a)).ToList();
+        }
+
+        private static Genero RequestToEntity(GeneroRequest genero)
+        {
+            return new Genero() { Nome = genero.Nome, Descricao = genero.Descricao };
         }
     }
 }
