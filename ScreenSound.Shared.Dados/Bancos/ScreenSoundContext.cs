@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using ScreenSound.Modelos;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ScreenSound.Shared.Modelos.Modelos;
 
 namespace ScreenSound.Bancos
 {
@@ -17,13 +11,19 @@ namespace ScreenSound.Bancos
         public DbSet<Genero> Generos { get; set; }
 
         private string connectionServer = "Data Source=(localdb)\\MSSQLLocalDB;Initial " +
-                    "Catalog=screenSoundV1;Integrated Security=True;Encrypt=False;";
+                    "Catalog=ScreenSound;Integrated Security=True;Encrypt=False;";
         //atribuir a conexao a uma variavel privada
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
         {
-            optionsBuilder.UseSqlServer(connectionServer)
+            optionsBuilder.UseSqlServer(connectionServer, b => b.MigrationsAssembly("ScreenSound.api"))
                           .UseLazyLoadingProxies();
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Musica>()
+            .HasMany(c => c.Generos)
+            .WithMany(c => c.Musicas);
         }
     }
 }
