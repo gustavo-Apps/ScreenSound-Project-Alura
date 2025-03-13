@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ScreenSound.api.Endpoints;
 using ScreenSound.Bancos;
 using ScreenSound.Modelos;
+using ScreenSound.Shared.Modelos.Modelos;
 using System.Data.SqlTypes;
 using System.Text.Json.Serialization;
 
@@ -14,6 +15,7 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
 builder.Services.AddDbContext<ScreenSoundContext>();
 builder.Services.AddTransient<DAL<Artista>>();
 builder.Services.AddTransient<DAL<Musica>>();
+builder.Services.AddTransient<DAL<Genero>>(); // Add this line to register DAL<Genero>
 
 // Add API explorer and Swagger
 builder.Services.AddEndpointsApiExplorer();

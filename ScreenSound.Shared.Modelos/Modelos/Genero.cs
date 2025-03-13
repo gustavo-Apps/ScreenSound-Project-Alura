@@ -14,7 +14,7 @@ namespace ScreenSound.Shared.Modelos.Modelos
 
         public string? Descricao { get; set; } = string.Empty;
 
-        public virtual ICollection<Musica> Musicas { get; set; }
+        public virtual ICollection<Musica>? Musicas { get; set; }
 
         public override string ToString()
         {

@@ -3,6 +3,7 @@ using ScreenSound.api.Requests;
 using ScreenSound.Bancos;
 using ScreenSound.Modelos;
 using ScreenSound.Shared.Modelos.Modelos;
+using System;
 
 namespace ScreenSound.api.Endpoints
 {
@@ -25,13 +26,18 @@ namespace ScreenSound.api.Endpoints
                 return Results.Ok(musica);
             });
 
-            app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal, [FromBody] MusicaRequest musicaRequest) =>
+            app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal, [FromServices] DAL<Artista> artistaDal, [FromServices] DAL<Genero> dalGenero, [FromBody] MusicaRequest musicaRequest) =>
             {
+                var artista = artistaDal.Buscar(a => a.Id == musicaRequest.artistaId).FirstOrDefault();
+                if (artista is null)
+                {
+                    return Results.NotFound("Artista not found");
+                }
                 var musica = new Musica(musicaRequest.nome)
                 {
-                    Id = musicaRequest.artistaId,
+                    Artista = artista, // Fix: Assign the Artista object instead of the artistaId
                     AnoLancamento = musicaRequest.anoLancamento,
-                    Generos = musicaRequest.Generos is not null ? GeneroRequestConverter(musicaRequest.Generos) : new List<Genero>()
+                    Generos = musicaRequest.Generos is not null ? GeneroRequestConverter(musicaRequest.Generos, dalGenero) : new List<Genero>()
                 };
                 dal.Adicionar(musica);
                 return Results.Ok();
@@ -65,14 +71,31 @@ namespace ScreenSound.api.Endpoints
             });
         }
 
-        private static ICollection<Genero> GeneroRequestConverter(ICollection<GeneroRequest> generos)
+        private static ICollection<Genero> GeneroRequestConverter(ICollection<GeneroRequest> generos, DAL<Genero> dalGenero)
         {
-            return generos.Select(a => RequestToEntity(a)).ToList();
+            var listaGeneros = new List<Genero>();
+            foreach (var item in generos)
+            {
+                var entity = RequestToEntity(item);
+                var genero = dalGenero.Buscar(g => g.Nome.ToUpper().Equals(item.Nome.ToUpper())).FirstOrDefault();
+
+                if (genero is not null)
+                {
+                    listaGeneros.Add(genero);
+                }
+                else
+                {
+                    listaGeneros.Add(entity);
+                }
+            }
+            return listaGeneros;
         }
 
         private static Genero RequestToEntity(GeneroRequest genero)
         {
             return new Genero() { Nome = genero.Nome, Descricao = genero.Descricao };
         }
+
+       
     }
 }

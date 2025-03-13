@@ -26,7 +26,10 @@ namespace ScreenSound.api.Endpoints
             });
             app.MapPost("/Artistas", ([FromServices] DAL<Artista> dal, [FromBody] ArtistaRequest artistaRequest) =>
             {
-                var artista = new Artista(artistaRequest.nome, artistaRequest.bio);
+                var artista = new Artista(artistaRequest.nome, artistaRequest.bio)
+                {
+                    FotoPerfil = artistaRequest.FotoPerfil // Ensure FotoPerfil is set
+                };
                 dal.Adicionar(artista);
                 return Results.Ok();
             });
